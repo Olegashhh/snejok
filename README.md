@@ -1,5 +1,7 @@
 # Winter Desktop
 
+[![build](https://github.com/Olegashhh/snejok/actions/workflows/build.yml/badge.svg)](https://github.com/Olegashhh/snejok/actions/workflows/build.yml)
+
 Бесплатное приложение для Windows, которое рисует интерактивный снегопад поверх
 рабочего стола и открытых окон: снежинки падают, ветер меняет их траекторию, а на
 верхних кромках окон и на панели задач копятся сугробы. Сугробы можно смахивать
@@ -41,11 +43,23 @@
 
 Подробный список известных ограничений — `docs/KNOWN_LIMITATIONS.md`.
 
+## Скачать и запустить
+
+Готовые сборки публикуются в разделе **Releases**:
+
+1. Скачайте `WinterDesktop-win-x64.zip` из последнего релиза.
+2. Распакуйте архив в любую папку.
+3. Запустите `WinterDesktop.exe`. Устанавливать .NET не нужно: сборка
+   self-contained.
+
+> У exe нет цифровой подписи, поэтому SmartScreen может показать предупреждение:
+> «Подробнее» → «Выполнить в любом случае».
+
 ## Требования
 
 - Windows 10 64-bit или Windows 11 (проверено на Windows 11).
-- .NET Desktop Runtime 8 x64 — для запуска готовой сборки.
-- .NET SDK 8.0 — для сборки из исходников.
+- Для запуска релизной сборки ничего дополнительно не требуется.
+- Для сборки из исходников — .NET SDK 8.0.
 - Видеодрайвер с поддержкой Direct3D 11 и DirectComposition. Если дискретный/встроенный
   GPU недоступен, приложение автоматически переходит на программный WARP-рендер.
 
@@ -59,11 +73,20 @@ dotnet build WinterDesktop.sln -c Debug
 Сборка без предупреждений: nullable включён, предупреждения nullable считаются
 ошибками (`Directory.Build.props`).
 
-Release-сборка:
+Release-сборка (нужен .NET Desktop Runtime 8 на машине пользователя):
 
 ```powershell
 dotnet publish src\WinterDesktop.App\WinterDesktop.App.csproj -c Release -r win-x64 --self-contained false
 ```
+
+Готовая self-contained сборка одним exe (ничего устанавливать не нужно):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\publish.ps1
+```
+
+Результат — `publish\WinterDesktop-win-x64.zip`. Этот же архив автоматически
+собирается и прикладывается к GitHub Release при пуше тега `v*`.
 
 ## Запуск
 
@@ -117,9 +140,10 @@ dotnet test tests\WinterDesktop.Core.Tests
 dotnet test tests\WinterDesktop.Settings.Tests
 ```
 
-Сейчас: **76 тестов ядра/снега/настроек + 13 тестов хранилища = 89**, все проходят.
+Сейчас: **78 тестов ядра/снега/настроек + 13 тестов хранилища = 91**, все проходят.
 Тесты не требуют GPU, окон и реального времени: симуляция использует
-детерминированный ГПСЧ и явный шаг времени.
+детерминированный ГПСЧ и явный шаг времени. CI собирает решение и запускает
+тесты на каждый push и pull request.
 
 ## Структура решения
 
@@ -136,7 +160,11 @@ WinterDesktop/
 ├─ tests/
 │  ├─ WinterDesktop.Core.Tests/
 │  └─ WinterDesktop.Settings.Tests/
-├─ tools/make-icon.ps1          генерация app.ico
+├─ tools/
+│  ├─ make-icon.ps1             генерация app.ico
+│  └─ publish.ps1               self-contained сборка в publish/
+├─ .github/workflows/           CI-сборка и публикация релизов
+├─ LICENSE                      MIT
 ├─ Directory.Build.props
 └─ WinterDesktop.sln
 ```
@@ -155,6 +183,8 @@ WinterDesktop/
 
 ## Лицензия
 
-Приложение бесплатное. Сторонние библиотеки распространяются по лицензиям MIT и
-Apache-2.0 (полный список — в `docs/TECH_STACK.md`). Собственная лицензия проекта
-будет зафиксирована отдельным файлом `LICENSE` на этапе подготовки релиза.
+Проект распространяется по лицензии **MIT** — полный текст в `LICENSE`.
+Можно свободно использовать, изменять и распространять проект, в том числе в
+коммерческих целях, при сохранении уведомления об авторстве. Сторонние
+библиотеки распространяются по лицензиям MIT и Apache-2.0 (полный список — в
+`docs/TECH_STACK.md`).
