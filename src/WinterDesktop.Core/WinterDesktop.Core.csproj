@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>WinterDesktop.Core</RootNamespace>
+    <AssemblyName>WinterDesktop.Core</AssemblyName>
+    <Description>Платформенно-независимое ядро Winter Desktop: модели настроек, геометрия, контракты модулей.</Description>
+  </PropertyGroup>
+
+</Project>

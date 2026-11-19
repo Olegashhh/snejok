@@ -1,0 +1,336 @@
+﻿<Window x:Class="WinterDesktop.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Winter Desktop" Height="680" Width="800"
+        MinHeight="520" MinWidth="700"
+        WindowStartupLocation="CenterScreen"
+        Background="#F7F8FA"
+        FontSize="13">
+    <TabControl Margin="8" Padding="0">
+
+        <!-- ================= Главная ================= -->
+        <TabItem Header="Главная">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="18,14,18,18">
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Снегопад" Margin="0,0,0,6" />
+
+                    <CheckBox Content="Снегопад включён" Margin="0,4"
+                              IsChecked="{Binding Snow.Enabled, Mode=TwoWay}" />
+
+                    <CheckBox Content="Режим взаимодействия (варежка и снежные инструменты)" Margin="0,4"
+                              IsChecked="{Binding Tools.InteractionMode, Mode=TwoWay}" />
+
+                    <DockPanel Style="{StaticResource FieldRow}" Margin="0,10,0,4">
+                        <TextBlock Text="Режим" Width="210" VerticalAlignment="Center" />
+                        <ComboBox x:Name="ModeCombo" Width="230" HorizontalAlignment="Left"
+                                  SelectionChanged="OnModeSelectionChanged" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Интенсивность" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.Intensity, StringFormat={}{0:P0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0.05" Maximum="1" Value="{Binding Snow.Intensity, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Размер снежинок" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.FlakeSizeScale, StringFormat={}{0:0.00}x}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0.4" Maximum="2.5" Value="{Binding Snow.FlakeSizeScale, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Скорость падения" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.FallSpeedScale, StringFormat={}{0:0.00}x}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0.2" Maximum="3" Value="{Binding Snow.FallSpeedScale, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Прозрачность" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.Opacity, StringFormat={}{0:P0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0.1" Maximum="1" Value="{Binding Snow.Opacity, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,8,0,0"
+                               Text="Слой прозрачен для мыши: можно работать с окнами, не выключая снег. В режиме взаимодействия варежка смахивает снег, а снежок и снеговик перехватывают клики только рядом с сугробом. Аварийное выключение режима — Ctrl+Alt+W." />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                        <Button Content="Очистить весь снег" Padding="14,6" Margin="0,0,10,0" Click="OnClearAll" />
+                        <Button Content="Очистить под курсором" Padding="14,6" Margin="0,0,10,0" Click="OnClearUnderCursor" />
+                        <Button x:Name="PauseButton" Content="Пауза" Padding="14,6" Margin="0,0,10,0" Click="OnTogglePause" />
+                        <Button Content="Применить" Padding="14,6" Click="OnApplyAll" />
+                    </StackPanel>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Состояние" Margin="0,20,0,4" />
+                    <TextBlock x:Name="StatsText" Style="{StaticResource Hint}" Text="—" />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- ================= Снегопад ================= -->
+        <TabItem Header="Снегопад">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="18,14,18,18">
+                    <TextBlock Style="{StaticResource Hint}"
+                               Text="Тонкая настройка физики: ветер, вихри, формы. Изменение любого ползунка переводит режим в «Свой»." />
+
+                    <DockPanel Style="{StaticResource FieldRow}" Margin="0,12,0,4">
+                        <TextBlock Text="Сила ветра" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.WindStrength, StringFormat={}{0:0.00}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="-1" Maximum="1" Value="{Binding Snow.WindStrength, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Направление ветра" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.WindAngleDegrees, StringFormat={}{0:0}°}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0" Maximum="360" Value="{Binding Snow.WindAngleDegrees, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Турбулентность" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.Turbulence, StringFormat={}{0:P0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0" Maximum="1" Value="{Binding Snow.Turbulence, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Боковой разброс" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.Spread, StringFormat={}{0:P0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0" Maximum="1" Value="{Binding Snow.Spread, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Формы" />
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Разнообразие форм" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.ShapeVariety, StringFormat={}{0:P0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0" Maximum="1" Value="{Binding Snow.ShapeVariety, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Доля крупных снежинок" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.LargeFlakeChance, StringFormat={}{0:P0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0" Maximum="0.5" Value="{Binding Snow.LargeFlakeChance, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Снежинки перед окнами" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Snow.ForegroundShare, StringFormat={}{0:P0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0" Maximum="1" Value="{Binding Snow.ForegroundShare, Mode=TwoWay}" />
+                    </DockPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- ================= Накопление ================= -->
+        <TabItem Header="Накопление">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="18,14,18,18">
+                    <CheckBox Content="Сугробы включены" Margin="0,4"
+                              IsChecked="{Binding Accumulation.Enabled, Mode=TwoWay}" />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Где копится снег" />
+
+                    <CheckBox Content="Верхние кромки окон" Margin="0,4"
+                              IsChecked="{Binding Accumulation.WindowTops, Mode=TwoWay}" />
+                    <CheckBox Content="Нижние кромки окон (подоконники)" Margin="0,4"
+                              IsChecked="{Binding Accumulation.WindowBottoms, Mode=TwoWay}" />
+                    <CheckBox Content="Панель задач" Margin="0,4"
+                              IsChecked="{Binding Accumulation.Taskbar, Mode=TwoWay}" />
+                    <CheckBox Content="Нижний край рабочей области" Margin="0,4"
+                              IsChecked="{Binding Accumulation.ScreenBottom, Mode=TwoWay}" />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Параметры" />
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Максимальная толщина, DIP" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Accumulation.MaxThicknessDip, StringFormat={}{0:0} пкс}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="3" Maximum="60" Value="{Binding Accumulation.MaxThicknessDip, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Скорость накопления" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Accumulation.DepositRate, StringFormat={}{0:0.00}x}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0.2" Maximum="3" Value="{Binding Accumulation.DepositRate, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,12,0,0"
+                               Text="Сугробы привязаны к геометрии окон: при перемещении окна снег сдвигается вместе с ним, при закрытии — ссыпается вниз." />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- ================= Гирлянды ================= -->
+        <TabItem Header="Гирлянды">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="18,14,18,18">
+                    <CheckBox Content="Гирлянды включены" Margin="0,4"
+                              IsChecked="{Binding Garlands.Enabled, Mode=TwoWay}" />
+
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,6,0,10"
+                               Text="Гирлянды висят на верхних кромках видимых окон. Перекрытые другими окнами участки нити не рисуются; при перемещении окна гирлянда едет вместе с ним." />
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Палитра" Width="210" VerticalAlignment="Center" />
+                        <ComboBox x:Name="GarlandPaletteCombo" Width="230" HorizontalAlignment="Left"
+                                  SelectionChanged="OnGarlandPaletteChanged" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Режим мигания" Width="210" VerticalAlignment="Center" />
+                        <ComboBox x:Name="GarlandAnimationCombo" Width="230" HorizontalAlignment="Left"
+                                  SelectionChanged="OnGarlandAnimationChanged" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Скорость" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Garlands.Speed, StringFormat={}{0:0.00}x}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0.1" Maximum="4" Value="{Binding Garlands.Speed, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Расстояние между лампочками, DIP" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Garlands.SpacingDip, StringFormat={}{0:0} пкс}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="12" Maximum="80" Value="{Binding Garlands.SpacingDip, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Размер лампочки, DIP" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Garlands.BulbSizeDip, StringFormat={}{0:0.0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="2" Maximum="12" Value="{Binding Garlands.BulbSizeDip, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Свечение" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Garlands.Glow, StringFormat={}{0:P0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0" Maximum="1" Value="{Binding Garlands.Glow, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,12,0,0"
+                               Text="«Мерцание» — каждая лампочка живёт в своей фазе; «Переливы» — волна яркости вдоль нити; «Бегущий огонь» — огни загораются по очереди; «Ровный свет» — без анимации. Гирлянды не зависят от сугробов и работают при выключенном снегопаде." />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- ================= Инструменты ================= -->
+        <TabItem Header="Инструменты">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="18,14,18,18">
+                    <DockPanel Style="{StaticResource FieldRow}" Margin="0,0,0,6">
+                        <TextBlock Text="Активный инструмент" Width="210" VerticalAlignment="Center" />
+                        <ComboBox x:Name="ToolCombo" Width="230" HorizontalAlignment="Left"
+                                  SelectionChanged="OnToolSelectionChanged" />
+                    </DockPanel>
+
+                    <CheckBox Content="Режим взаимодействия включён" Margin="0,4"
+                              IsChecked="{Binding Tools.InteractionMode, Mode=TwoWay}" />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Варежка" />
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Радиус, DIP" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Tools.MittenRadiusDip, StringFormat={}{0:0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="12" Maximum="200" Value="{Binding Tools.MittenRadiusDip, Mode=TwoWay}" />
+                    </DockPanel>
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Сила смахивания" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Tools.MittenStrength, StringFormat={}{0:0.00}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0.1" Maximum="1" Value="{Binding Tools.MittenStrength, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Лопата" />
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Радиус, DIP" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Tools.ShovelRadiusDip, StringFormat={}{0:0}}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="40" Maximum="500" Value="{Binding Tools.ShovelRadiusDip, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,12,0,0"
+                               Text="Варежка смахивает снег при движении курсора (нужен режим взаимодействия). Лопата убирает снег вокруг курсора по нажатию левой кнопки мыши и работает всегда." />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Снежок и снеговик" />
+                    <TextBlock Style="{StaticResource Hint}"
+                               Text="Снежок: нажмите на сугроб, чтобы скатать шар, и отпустите с движением мыши, чтобы бросить. Снежок летит с гравитацией и ветром, разбивается о кромку или стекло окна. Снеговик: каждое нажатие на сугроб добавляет шар (1–3), готовый снеговик стоит на кромке и сохраняется между запусками. Оба инструмента работают только в режиме взаимодействия." />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- ================= Мониторы ================= -->
+        <TabItem Header="Мониторы">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="18,14,18,18">
+                    <CheckBox x:Name="AllMonitorsCheck" Content="Показывать снег на всех мониторах"
+                              Margin="0,4" Click="OnAllMonitorsClick" />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Список мониторов" />
+                    <StackPanel x:Name="MonitorsPanel" />
+
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,14,0,0"
+                               Text="Отключение монитора убирает с него слой снега и снижает нагрузку. Разрешение и DPI определяются автоматически; изменения подхватываются без перезапуска." />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- ================= Производительность ================= -->
+        <TabItem Header="Производительность">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="18,14,18,18">
+                    <DockPanel Style="{StaticResource FieldRow}" Margin="0,0,0,6">
+                        <TextBlock Text="Профиль" Width="210" VerticalAlignment="Center" />
+                        <ComboBox x:Name="ProfileCombo" Width="230" HorizontalAlignment="Left"
+                                  SelectionChanged="OnProfileSelectionChanged" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Ограничение частоты кадров" Width="210" VerticalAlignment="Center" />
+                        <ComboBox x:Name="FpsCombo" Width="230" HorizontalAlignment="Left"
+                                  SelectionChanged="OnFpsSelectionChanged" />
+                    </DockPanel>
+
+                    <DockPanel Style="{StaticResource FieldRow}">
+                        <TextBlock Text="Предел частиц (0 — авто)" Width="210" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Performance.MaxParticles}" Width="56" TextAlignment="Right" />
+                        <Slider Minimum="0" Maximum="8000" TickFrequency="100" IsSnapToTickEnabled="True"
+                                Value="{Binding Performance.MaxParticles, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <CheckBox Content="Автоматически снижать качество при просадке FPS" Margin="0,8,0,4"
+                              IsChecked="{Binding Performance.AdaptiveQuality, Mode=TwoWay}" />
+                    <CheckBox Content="Приостанавливать в полноэкранном режиме" Margin="0,4"
+                              IsChecked="{Binding Performance.PauseInFullscreen, Mode=TwoWay}" />
+                    <CheckBox Content="Экономить заряд при работе от батареи" Margin="0,4"
+                              IsChecked="{Binding Performance.ReduceOnBattery, Mode=TwoWay}" />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Текущая нагрузка" />
+                    <TextBlock x:Name="PerfStatsText" Style="{StaticResource Hint}" Text="—" />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- ================= Общие ================= -->
+        <TabItem Header="Общие">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="18,14,18,18">
+                    <CheckBox Content="Запускать вместе с Windows" Margin="0,4"
+                              IsChecked="{Binding General.RunAtStartup, Mode=TwoWay}" />
+                    <CheckBox Content="Стартовать свёрнутым в трей" Margin="0,4"
+                              IsChecked="{Binding General.StartMinimized, Mode=TwoWay}" />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Файлы и настройки" />
+                    <TextBlock x:Name="SettingsPathText" Style="{StaticResource Hint}" Text="—" />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <Button Content="Экспорт…" Padding="14,6" Margin="0,0,10,0" Click="OnExport" />
+                        <Button Content="Импорт…" Padding="14,6" Margin="0,0,10,0" Click="OnImport" />
+                        <Button Content="Открыть логи" Padding="14,6" Margin="0,0,10,0" Click="OnOpenLogs" />
+                    </StackPanel>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="Сброс" />
+                    <Button Content="Сбросить все настройки" Padding="14,6" HorizontalAlignment="Left" Click="OnResetSettings" />
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,8,0,0"
+                               Text="Сброс вернёт значения по умолчанию и сразу сохранит их. Файл настроек защищён резервной копией: при повреждении приложение восстановит .bak." />
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="О программе" />
+                    <TextBlock x:Name="AboutText" Style="{StaticResource Hint}" Text="—" />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+    </TabControl>
+</Window>

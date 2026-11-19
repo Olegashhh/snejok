@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>WinterDesktop.Renderer</RootNamespace>
+    <AssemblyName>WinterDesktop.Renderer</AssemblyName>
+    <Description>Прозрачный overlay-слой: Direct3D 11 flip-model swapchain + DirectComposition + Direct2D.</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WinterDesktop.Core\WinterDesktop.Core.csproj" />
+    <ProjectReference Include="..\WinterDesktop.SnowEngine\WinterDesktop.SnowEngine.csproj" />
+    <ProjectReference Include="..\WinterDesktop.Platform\WinterDesktop.Platform.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Vortice.Direct2D1" Version="3.8.3" />
+    <PackageReference Include="Vortice.Direct3D11" Version="3.8.3" />
+    <PackageReference Include="Vortice.DirectComposition" Version="3.8.3" />
+    <PackageReference Include="Vortice.DXGI" Version="3.8.3" />
+    <PackageReference Include="Vortice.Mathematics" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>

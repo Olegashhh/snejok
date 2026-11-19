@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>WinterDesktop.Platform</RootNamespace>
+    <AssemblyName>WinterDesktop.Platform</AssemblyName>
+    <Description>Win32-интеграция: отслеживание геометрии окон, мониторы, питание, полноэкранные приложения, автозапуск.</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WinterDesktop.Core\WinterDesktop.Core.csproj" />
+  </ItemGroup>
+
+</Project>

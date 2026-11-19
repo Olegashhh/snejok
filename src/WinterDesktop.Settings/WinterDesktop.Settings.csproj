@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>WinterDesktop.Settings</RootNamespace>
+    <AssemblyName>WinterDesktop.Settings</AssemblyName>
+    <Description>Локальное хранение настроек: JSON, атомарная запись, миграции, импорт/экспорт.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WinterDesktop.Core\WinterDesktop.Core.csproj" />
+  </ItemGroup>
+
+</Project>

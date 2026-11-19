@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>WinterDesktop.SnowEngine</RootNamespace>
+    <AssemblyName>WinterDesktop.SnowEngine</AssemblyName>
+    <Description>Генерация, физика снега и модель сугробов. Без Win32 и без графических API.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WinterDesktop.Core\WinterDesktop.Core.csproj" />
+  </ItemGroup>
+
+</Project>
